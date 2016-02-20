@@ -8,6 +8,10 @@ I decided to use 4 averages of frequencies range :
 - Voices : 600 to 2000Hz
 - Cymbals : 2000 to 16000Hz
 
+### Demo
+
+https://itsonly.herokuapp.com/
+
 ### Installation
 
 ```
