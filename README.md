@@ -26,7 +26,7 @@ And go to : localhost:3000
 
 ### Packages useds
 
-- web-audio-player by jam3 (https://github.com/Jam3/web-audio-player) 
+- soundbloud-badge by hughsk (https://github.com/hughsk/soundcloud-badge) 
 - web-audio-analyser by hughsk (https://www.npmjs.com/package/web-audio-analyser)
 - analyser-frequency-average by jam3 (https://github.com/Jam3/analyser-frequency-average)
 

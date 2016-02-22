@@ -8,7 +8,7 @@ var raf = Utils.Raf();
 var scene = new Scene();
 
 class App {
-	init(){\
+	init(){
 		scene.init();
 	}
 }

@@ -1,9 +1,13 @@
 'use strict';
 
-let createPlayer = require('web-audio-player'); //Jam3
 let createAnalyser = require('web-audio-analyser'); //hughsk 
 let average = require('analyser-frequency-average'); //Jam3
+
+import { frequencyAverages } from './audio-utils'
+
+
 let start = Date.now();
+
 
 class Scene {
 	init(){
@@ -13,14 +17,12 @@ class Scene {
 		this.scene = new THREE.Scene();
 		this.scene.rotation.y = Math.PI/4;
 		this.camera();
-		this.renderer();
+		
 		this.light();
 
 		this.initShapes();
-		this.audio();
 
-		this.render();
-
+		this.events();		
 	}
 
 	camera(){
@@ -212,42 +214,70 @@ class Scene {
 
 	}
 
-	audio(){
-		let audio = createPlayer('../audios/only.mp3');
+	audio(urlSoundcloud){
 
-		audio.on('load', () => {
-			console.log('Audio loaded...')
+		let self = this;
 
-			// start playing audio file
-			audio.play()
+		let url;
+		if(urlSoundcloud != null){
+			url = urlSoundcloud;
+		}else{
+			url = 'https://soundcloud.com/odesza/its-only'
+		}
+		
+		this.soundcloud = require('soundcloud-badge')({
+			client_id: 'a709052797c1b5999fe7ef4c88722dd9',
+			song: url,
+			dark: true,
+			getFonts: true
+		}, function(err, src, data, div) {
+		  if (err) throw err
 
-			audio.node.connect(audio.context.destination);
+		  	// Play the song on
+		  	// a modern browser
+		  	console.log(src);
+
+		  	self.player = new Audio();
+			self.player.crossOrigin = 'Anonymous'
+		  	self.player.src = src;
+
+			// Set up our AnalyserNode utility
+			self.analyser = createAnalyser(self.player, {
+				stereo: false
+			});
+
+			self.player.play();	
+
+			self.analyserNode = self.analyser.analyser;
+			let sampleRate = self.analyser.ctx.sampleRate;
+			let fftSize = self.analyserNode.fftSize;
+
+			self.getAverage = frequencyAverages(sampleRate, fftSize)
+
+			self.renderer();
+			self.render();
+
+			document.getElementsByTagName('body')[0].classList.add('is-launched');
+
 		});
 
-		// Set up our AnalyserNode utility
-		this.audioUtil = createAnalyser(audio.node, audio.context, {
-			stereo: false
-		})
+		console.log(this.player);
 
-		// The actual AnalyserNode
-		this.analyser = this.audioUtil.analyser;
+
 
 	}
 
 	render(){
 
 		try{
-
 			// grab our byte frequency data for this frame
-		    this.freqs = this.audioUtil.frequencies()
+		    this.freqs = this.analyser.frequencies()
 
 		    // Get different range of frequencies
-
-		    this.waves = this.audioUtil.waveform();
-		    this.bass = average(this.analyser, this.freqs, 40, 200);
-		    this.midBass = average(this.analyser, this.freqs, 200, 600);
-		    this.voice = average(this.analyser, this.freqs, 600, 2000 );
-		    this.drum = average(this.analyser, this.freqs, 2000, 16000 );
+		    this.bass = this.getAverage(this.freqs, 40, 200);
+		    this.midBass = this.getAverage(this.freqs, 200, 600);
+		    this.voice = this.getAverage(this.freqs, 600, 2000 );
+		    this.drum = this.getAverage(this.freqs, 2000, 16000 );
 
 		    // Animation
 		    for (var i = 0; i < this.middleSpheresArray.children.length - 1; i++) {
@@ -286,15 +316,28 @@ class Scene {
 			this.composer.toScreen();
 
 
-			requestAnimationFrame(this.render.bind(this));
-			// this.renderer.render(this.scene, this.camera);
-
 			// Update orbit control
 			this.controls.update();
 
-	    }catch(e){
+		    requestAnimationFrame(this.render.bind(this));
+	    }
+	    catch(e){
 
 	    }
+	}
+
+	events(){
+		let self = this;
+		document.getElementById('submit-button').addEventListener('click', function(e) {
+			e.preventDefault();
+
+		    var value = document.getElementById('input-url').value;
+		    self.audio(value);
+		});
+
+		document.getElementById('submit-demo').addEventListener('click', function(e) {
+		    self.audio(null);
+		});
 	}
 	
 }

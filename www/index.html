@@ -12,35 +12,19 @@
 	</head>
 	<body>
 		
-			<footer id="footer">
-				Made with love by <a target="_blank" href="https://twitter.com/QuentinHocde">Quentin Hocdé</a> | Music - It's Only by <a target="_blank" href="https://soundcloud.com/odesza">Odesza</a>
-			</footer>
+		<section class="form-wrapper">
+			<form id="form-url"action="#">
+				<input type="text" placeholder="Past a soundcloud url" id="input-url">
+				<input type="submit" value="Launch my song" id="submit-button">
+				<input type="submit" value="Demo" id="submit-demo">
+			</form>
+		</section>
+
+		<footer id="footer">
+			Made with love by <a target="_blank" href="https://twitter.com/QuentinHocde">Quentin Hocdé</a>
+		</footer>
 		
 		<script id="vs" type="x-shader/x-vertex">
-			// varying vec2 vN;
-
-			// void main() {
-
-			//     vec4 p = vec4( position, 1. );
-
-			//     vec3 e = normalize( vec3( modelViewMatrix * p ) );
-			//     vec3 n = normalize( normalMatrix * normal );
-
-			//     vec3 r = reflect( e, n );
-			//     float m = 2. * sqrt( 
-			//         pow( r.x, 2. ) + 
-			//         pow( r.y, 2. ) + 
-			//         pow( r.z + 1., 2. ) 
-			//     );
-			//     vN = r.xy / m + .5;
-
-			//     gl_Position = projectionMatrix * modelViewMatrix * p;
-
-			// }
-
-			
-
-			
 
 			vec3 mod289(vec3 x)
 			{
