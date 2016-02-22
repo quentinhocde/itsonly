@@ -16,22 +16,26 @@ class Scene {
 
 		this.scene = new THREE.Scene();
 		this.scene.rotation.y = Math.PI/4;
-		this.camera();
+		this.initCamera();
 		
 		this.light();
 
 		this.initShapes();
 
-		this.events();		
+		this.events();	
+
 	}
 
-	camera(){
+	initCamera(){
 		this.camera = new THREE.PerspectiveCamera( 45 , window.innerWidth / window.innerHeight, 1, 5000 );
 		this.camera.position.y = 500;
 		this.camera.position.z = 500;
 		this.camera.position.x = 500;
 		this.camera.updateProjectionMatrix();
 		this.camera.lookAt(this.scene.position);
+
+		window.addEventListener('resize', this.resize.bind(this));	
+
 	}
 
 	renderer(){
@@ -65,7 +69,6 @@ class Scene {
 
 		this.renderer.autoClearColor = true;
 		this.composer.toScreen();
-
 
 	}
 
@@ -338,6 +341,18 @@ class Scene {
 		document.getElementById('submit-demo').addEventListener('click', function(e) {
 		    self.audio(null);
 		});
+	}
+
+	resize () {
+
+	    this.wWidth = window.innerWidth;
+	    this.wHeight = window.innerHeight;
+
+	    this.camera.aspect = this.wWidth / this.wHeight;
+	    this.camera.updateProjectionMatrix();
+
+	    this.renderer.setSize( this.wWidth, this.wHeight );
+
 	}
 	
 }
