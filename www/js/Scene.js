@@ -229,7 +229,7 @@ class Scene {
 			client_id: 'a709052797c1b5999fe7ef4c88722dd9',
 			song: url,
 			dark: true,
-			getFonts: true
+			getFonts: false
 		}, function(err, src, data, div) {
 		  if (err) throw err
 
